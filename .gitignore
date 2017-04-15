@@ -1,3 +1,6 @@
+bin/
+.DS_store
+thumbs.db
 *.class
 
 # Mobile Tools for Java (J2ME)
