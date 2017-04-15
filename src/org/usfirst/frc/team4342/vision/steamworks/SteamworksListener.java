@@ -7,7 +7,7 @@ import org.usfirst.frc.team4342.vision.api.target.Target;
 import org.usfirst.frc.team4342.vision.api.target.TargetReport;
 
 /**
- * <p>Listener for FIRST SteamWORKS</p>
+ * <p>Listener for FIRST Steamworks</p>
  * 
  * Calculates the yaw of the boiler and sends a recommended yaw
  * that the robot should orient to to shoot
