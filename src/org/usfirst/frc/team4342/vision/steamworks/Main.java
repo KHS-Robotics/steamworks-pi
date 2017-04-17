@@ -1,18 +1,25 @@
 package org.usfirst.frc.team4342.vision.steamworks;
 
+import org.opencv.core.Core;
 import org.usfirst.frc.team4342.vision.DemonVision;
 import org.usfirst.frc.team4342.vision.api.cameras.Camera;
 import org.usfirst.frc.team4342.vision.api.cameras.USBCamera;
-import org.usfirst.frc.team4342.vision.api.listeners.Listener;
 import org.usfirst.frc.team4342.vision.api.pipelines.parameters.Blur;
 import org.usfirst.frc.team4342.vision.api.pipelines.parameters.PipelineParameters;
 import org.usfirst.frc.team4342.vision.api.pipelines.parameters.RGBBounds;
 import org.usfirst.frc.team4342.vision.api.pipelines.parameters.Resolution;
+import org.usfirst.frc.team4342.vision.api.tables.SmartDashboard;
+import org.usfirst.frc.team4342.vision.api.target.Target;
+import org.usfirst.frc.team4342.vision.api.target.TargetComparator;
 
 /**
  * Main class
  */
 public class Main  {
+	static {
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+	}
+	
 	// Network Tables
 	private static final int TEAM_NUMBER = 4342;
 	
@@ -36,12 +43,22 @@ public class Main  {
 		// Pipeline Parameters
 		PipelineParameters parameters = new PipelineParameters(RESOLUTION, BLUR, RGB);
 		
-		// Listener
-		Listener listener = new SteamworksListener(camera);
-		
 		// DemonVision
-		DemonVision.setTeamNumber(TEAM_NUMBER);
-		DemonVision dv = new DemonVision(camera, parameters, listener);
+		DemonVision dv = new DemonVision(TEAM_NUMBER, camera, parameters, (report) -> {
+			SmartDashboard.putNumber("DV-Targets", report.getTargetCount());
+			
+	        if(report.getTargetCount() > 1) {
+	        	Target[] targets = report.getTargets(TargetComparator.Type.AREA);
+	            Target top = targets[0];
+
+	            double robotYaw = SmartDashboard.getNumber("NavX-Yaw", 0.0);
+	            double boilerYaw = robotYaw + top.getYawOffset(camera.getFOV());
+
+	            SmartDashboard.putNumber("Boiler-CenterX-Ratio", top.x);
+	            SmartDashboard.putNumber("Boiler-CenterY-Ratio", top.y);
+	            SmartDashboard.putNumber("Boiler-Yaw", boilerYaw);
+	        }
+		});
 		
 		// Let's do this
 		dv.runForever();
