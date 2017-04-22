@@ -52,7 +52,7 @@ public class Main  {
 	            Target top = targets[0];
 
 	            double robotYaw = SmartDashboard.getNumber("NavX-Yaw", 0.0);
-	            double boilerYaw = robotYaw + top.getYawOffset(camera.getFOV());
+	            double boilerYaw = robotYaw + top.getYawOffset(68.5);//camera.getFOV());
 
 	            SmartDashboard.putNumber("Boiler-CenterX-Ratio", top.x);
 	            SmartDashboard.putNumber("Boiler-CenterY-Ratio", top.y);
