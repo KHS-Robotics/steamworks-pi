@@ -8,20 +8,24 @@ import org.usfirst.frc.team4342.vision.api.pipelines.parameters.Blur;
 import org.usfirst.frc.team4342.vision.api.pipelines.parameters.PipelineParameters;
 import org.usfirst.frc.team4342.vision.api.pipelines.parameters.RGBBounds;
 import org.usfirst.frc.team4342.vision.api.pipelines.parameters.Resolution;
-import org.usfirst.frc.team4342.vision.api.tables.SmartDashboard;
 import org.usfirst.frc.team4342.vision.api.target.Target;
 import org.usfirst.frc.team4342.vision.api.target.TargetComparator;
+
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 /**
  * Main class
  */
 public class Main  {
 	static {
+		// Load OpenCV
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		
+		// Configure NetworkTables
+		NetworkTable.setClientMode();
+		NetworkTable.setNetworkIdentity("rasperry-pi-3");
+		NetworkTable.setIPAddress("roborio-4342-frc.local");
 	}
-	
-	// Network Tables
-	private static final int TEAM_NUMBER = 4342;
 	
 	// Microsoft LifeCam HD 3000
 	private static final int USB_PORT = 0;
@@ -37,6 +41,8 @@ public class Main  {
 	 * @param args command-line arguments
 	 */
 	public static void main(String[] args) {
+		NetworkTable table = NetworkTable.getTable("SmartDashboard");
+		
 		// Camera
 		Camera camera = new USBCamera(USB_PORT, FIELD_OF_VIEW);
 		
@@ -44,19 +50,19 @@ public class Main  {
 		PipelineParameters parameters = new PipelineParameters(RESOLUTION, BLUR, RGB);
 		
 		// DemonVision
-		DemonVision dv = new DemonVision(TEAM_NUMBER, camera, parameters, (report) -> {
-			SmartDashboard.putNumber("DV-Targets", report.getTargetCount());
+		DemonVision dv = new DemonVision(camera, parameters, (report) -> {
+			table.putNumber("DV-Targets", report.getTargetCount());
 			
 	        if(report.getTargetCount() > 1) {
 	        	Target[] targets = report.getTargets(TargetComparator.Type.AREA);
 	            Target top = targets[0];
 
-	            double robotYaw = SmartDashboard.getNumber("NavX-Yaw", 0.0);
-	            double boilerYaw = robotYaw + top.getYawOffset(68.5);//camera.getFOV());
+	            double robotYaw = table.getNumber("NavX-Yaw", 0.0);
+	            double boilerYaw = robotYaw + top.getYawOffset(camera.getFOV());
 
-	            SmartDashboard.putNumber("Boiler-CenterX-Ratio", top.x);
-	            SmartDashboard.putNumber("Boiler-CenterY-Ratio", top.y);
-	            SmartDashboard.putNumber("Boiler-Yaw", boilerYaw);
+	            table.putNumber("Boiler-CenterX", top.x);
+	            table.putNumber("Boiler-CenterY", top.y);
+	            table.putNumber("Boiler-Yaw", boilerYaw);
 	        }
 		});
 		
