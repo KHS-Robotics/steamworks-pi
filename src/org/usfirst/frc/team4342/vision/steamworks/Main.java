@@ -58,7 +58,7 @@ public class Main  {
 	            Target top = targets[0];
 
 	            double robotYaw = table.getNumber("NavX-Yaw", 0.0);
-	            double boilerYaw = robotYaw + top.getYawOffset(camera.getFOV());
+	            double boilerYaw = robotYaw + top.getYawOffset(camera.getFoV());
 
 	            table.putNumber("Boiler-CenterX", top.x);
 	            table.putNumber("Boiler-CenterY", top.y);
