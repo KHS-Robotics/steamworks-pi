@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 public class Main  {
 	static {
 		// Load OpenCV
-		System.loadLibrary("");
+		System.loadLibrary("opencv_java310");
 		
 		// Configure NetworkTables
 		NetworkTable.setClientMode();
