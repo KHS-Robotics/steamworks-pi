@@ -1,17 +1,71 @@
-import edu.wpi.first.wpilibj.networktables.*;
-import edu.wpi.first.wpilibj.tables.*;
+mport org.opencv.core.Core;
+import org.usfirst.frc.team4342.vision.DemonVision;
+import org.usfirst.frc.team4342.vision.api.cameras.Camera;
+import org.usfirst.frc.team4342.vision.api.cameras.USBCamera;
+import org.usfirst.frc.team4342.vision.api.pipelines.parameters.Blur;
+import org.usfirst.frc.team4342.vision.api.pipelines.parameters.PipelineParameters;
+import org.usfirst.frc.team4342.vision.api.pipelines.parameters.RGBBounds;
+import org.usfirst.frc.team4342.vision.api.pipelines.parameters.Resolution;
+import org.usfirst.frc.team4342.vision.api.target.Target;
+import org.usfirst.frc.team4342.vision.api.target.TargetComparator;
 
-public class Main {
-  public static void main(String[] args) {
-    // Loads our OpenCV library. This MUST be included
-    System.loadLibrary("opencv_java310");
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
-    // Connect NetworkTables, and get access to the publishing table
-    NetworkTable.setClientMode();
-    NetworkTable.setTeam(4342);
-    NetworkTable.setNetworkIdentity("rasperry-pi-3");
-    NetworkTable.initialize();
+/**
+ * Main class
+ */
+public class Main  {
+	static {
+		// Load OpenCV
+		System.loadLibrary("");
+		
+		// Configure NetworkTables
+		NetworkTable.setClientMode();
+		NetworkTable.setNetworkIdentity("rasperry-pi-3");
+		NetworkTable.setTeam(4342);
+		NetworkTable.initialize();
+	}
+	
+	// Microsoft LifeCam HD 3000
+	private static final int USB_PORT = 0;
+	private static final double FIELD_OF_VIEW = 68.5;
+	
+	// 360x240, Gaussian blur, and keep green targets
+	private static final Resolution RESOLUTION = new Resolution(360, 240);
+	private static final Blur BLUR = new Blur(Blur.Type.GAUSSIAN, 1.88);
+	private static final RGBBounds RGB = new RGBBounds(0, 70, 84, 255, 0, 45);
+	
+	/**
+	 * The main entry point
+	 * @param args command-line arguments
+	 */
+	public static void main(String[] args) {
+		NetworkTable table = NetworkTable.getTable("SmartDashboard");
+		
+		// Camera
+		Camera camera = new USBCamera(USB_PORT, FIELD_OF_VIEW);
+		
+		// Pipeline Parameters
+		PipelineParameters parameters = new PipelineParameters(RESOLUTION, BLUR, RGB);
+		
+		// DemonVision
+		DemonVision dv = new DemonVision(camera, parameters, (report) -> {
+			table.putNumber("DV-Targets", report.getTargetCount());
+			
+	        if(report.getTargetCount() > 1) {
+	        	Target[] targets = report.getTargets(TargetComparator.Type.AREA);
+	            Target top = targets[0];
 
-    System.out.println("Hello, World!");
-  }
+	            double robotYaw = table.getNumber("NavX-Yaw", 0.0);
+	            double boilerYaw = robotYaw + top.getYawOffset(camera.getFoV());
+
+	            table.putNumber("Boiler-CenterX", top.x);
+	            table.putNumber("Boiler-CenterY", top.y);
+	            table.putNumber("Boiler-Yaw", boilerYaw);
+	        }
+		});
+		
+		// Let's do this
+		dv.runForever();
+	}
 }
