@@ -16,17 +16,9 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
  * Main class
  */
 public class Main  {
-	static {
-		// Load OpenCV
-		System.loadLibrary("opencv_java310");
-		
-		// Configure NetworkTables
-		NetworkTable.setClientMode();
-		NetworkTable.setNetworkIdentity("rasperry-pi-3");
-		NetworkTable.setTeam(4342);
-		NetworkTable.initialize();
-	}
-	
+	private static final int TEAM_NUMBER = 4342;
+	private static final String NETWORK_TABLES_IDENTITY = "team4342-raspberry-pi-3";
+
 	// Microsoft LifeCam HD 3000
 	private static final int USB_PORT = 0;
 	private static final double FIELD_OF_VIEW = 68.5;
@@ -35,6 +27,17 @@ public class Main  {
 	private static final Resolution RESOLUTION = new Resolution(360, 240);
 	private static final Blur BLUR = new Blur(Blur.Type.GAUSSIAN, 1.88);
 	private static final RGBBounds RGB = new RGBBounds(0, 70, 84, 255, 0, 45);
+
+	static {
+		// Load OpenCV
+		System.loadLibrary("opencv_java310");
+		
+		// Configure NetworkTables
+		NetworkTable.setClientMode();
+		NetworkTable.setNetworkIdentity(NETWORK_TABLES_IDENTITY);
+		NetworkTable.setTeam(TEAM_NUMBER);
+		NetworkTable.initialize();
+	}
 	
 	/**
 	 * The main entry point
