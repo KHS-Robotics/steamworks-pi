@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="0.0.3"
+VERSION="0.0.4"
 
 # Create and move into working directory
 echo "Creating libs directory..."
