@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="0.0.1"
+VERSION="0.0.3"
 
 # Create and move into working directory
 echo "Creating libs directory..."
@@ -17,8 +17,8 @@ unzip v$VERSION.zip
 rm -rf v$VERSION.zip
 
 # Extract DemonVision.jar
-echo "Extracting demon_vision.jar..."
-mv ./DemonVision-$VERSION/dist/demon_vision.jar ./
+echo "Extracting DemonVision.jar..."
+mv ./DemonVision-$VERSION/dist/DemonVision.jar ./
 rm -rf DemonVision-$VERSION
 
 # Back out one level

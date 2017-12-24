@@ -19,7 +19,7 @@ ext.buildType = "arm-raspbian"
 //ext.buildType = "armhf"
 
 // Change the line below if you change the name of your main Java class
-mainClassName = 'Main'
+mainClassName = 'org.usfirst.frc.team4342.vision.steamworks.Main'
 // Change the line below to change the name of the output jar
 def projectName = 'CameraVision'
 
@@ -40,7 +40,7 @@ dependencies {
   compile ntcoreDep()
   compile cscoreDep()
   compile 'org.opencv:opencv-java:3.1.0'
-  compile name: 'demon_vision'
+  compile name: 'DemonVision'
 }
 
 jar {
