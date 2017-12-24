@@ -18,14 +18,7 @@ To do this, open the `build.gradle` file. Near the top at line 10 starts a group
 To select a device, just uncomment the system you want to build for. 
 
 Note it is possible to easily switch which system you want to target. To do so, just switch which build type is uncommented. When you do this, you will have to run a clean `gradlew clean` in order to
-clear out any old artifacts. 
-
-## Choosing the camera type
-This sample includes 2 ways to get a camera image. The first way is from a stream coming from the roboRIO, which is created with `CameraServer.getInstance().startAutomaticCapture();`. This 
-is the only method that is supported on windows. The second way is by opening a USB camera directly on the device. This will likely allow higher resolutions, however is only supported on Linux
-devices.
-
-To select between the types, open the `Main.java` file in `src/main/java`, and scroll down to the line that says "Selecting a Camera". Follow the directions there to select one.
+clear out any old artifacts.
 
 ## Building and running on the local device
 If you are running the build for your specific platform on the device you plan on running, you can use `gradlew run` to run the code directly. You can also run `gradlew build` to run a build.
