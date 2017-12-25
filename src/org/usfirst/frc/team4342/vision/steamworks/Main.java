@@ -1,5 +1,6 @@
 package org.usfirst.frc.team4342.vision.steamworks;
 
+import org.opencv.core.Core;
 import org.usfirst.frc.team4342.vision.DemonVision;
 import org.usfirst.frc.team4342.vision.api.cameras.Camera;
 import org.usfirst.frc.team4342.vision.api.cameras.USBCamera;
@@ -17,7 +18,7 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
  */
 public class Main  {
 	private static final int TEAM_NUMBER = 4342;
-	private static final String NETWORK_TABLES_IDENTITY = "team4342-raspberry-pi-3";
+	private static final String NETWORK_TABLES_IDENTITY = "team" + TEAM_NUMBER +"-raspberry-pi-3";
 
 	// Microsoft LifeCam HD 3000
 	private static final int USB_PORT = 0;
@@ -30,7 +31,7 @@ public class Main  {
 
 	static {
 		// Load OpenCV
-		System.loadLibrary("opencv_java310");
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		
 		// Configure NetworkTables
 		NetworkTable.setClientMode();
